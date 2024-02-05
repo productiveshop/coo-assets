@@ -81,3 +81,7 @@ input[type="checkbox"]::before {
 .card__img-wrap{
     aspect-ratio: 9/5;
 }
+
+.filter-wrap .filter-list{
+    display: flex;
+}
