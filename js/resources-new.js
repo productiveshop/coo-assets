@@ -1,4 +1,10 @@
 "use strict";
+
+const filterSearchWrapElements = document.querySelectorAll('.filter-search-wrap');
+const filterSearchTypeElements = document.querySelectorAll('.filter-search-type');
+function isMobile() {
+    return window.innerWidth < 767;
+}
 filterSearchWrapElements.forEach((filterSearchWrapElement) => {
     const titleElement = filterSearchWrapElement.querySelector('.filter-search__title');
     const mobileList = filterSearchWrapElement.querySelector('.mobile-list');
