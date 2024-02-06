@@ -84,4 +84,25 @@ input[type="checkbox"]::before {
 
 .filter-wrap .filter-list{
     display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.btn-number.jetboost-pagination-page-active{
+    color: #00C3EF;
+    border-color: #00C3EF;
+}
+
+@media (max-width: 767px){
+    .btn-next{
+        background-position: 85%;
+        background-size: 12px 12px;
+        font-size: 14px;
+    }
+
+    .btn-prev{
+        background-position: 19%;
+        background-size: 12px 12px;
+        font-size: 14px;
+    }
 }

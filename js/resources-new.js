@@ -1,10 +1,38 @@
 "use strict";
+const checkboxes = document.querySelectorAll('.filter-checkbox');
+const currentUrl = window.location.href;
+
+
+checkboxes.forEach(checkbox => {
+    checkbox.addEventListener('click', () => {
+        const input = checkbox.querySelector('input[data-name]');
+        const dataName = input.getAttribute('data-name');
+        const curUrl = new OriginalURL(window.location.href);
+        const resetButton = document.querySelector('.reset-button');
+        //curUrl.searchParams.set('name', dataName);
+        // history.pushState(null, null, curUrl.toString());
+        if (input.checked) {
+            input.disabled = true;
+            checkboxes.forEach(otherCheckbox => {
+                if (otherCheckbox === checkbox) {
+                    otherCheckbox.querySelector('input').disabled = true;
+                }
+                if (otherCheckbox !== checkbox) {
+                    otherCheckbox.querySelector('input').disabled = false;
+                    otherCheckbox.querySelector('input').checked = false;
+                }
+            });
+            const name = checkbox.querySelector('input').getAttribute('name');
+        }
+    });
+});
 
 const filterSearchWrapElements = document.querySelectorAll('.filter-search-wrap');
 const filterSearchTypeElements = document.querySelectorAll('.filter-search-type');
 function isMobile() {
     return window.innerWidth < 767;
 }
+
 filterSearchWrapElements.forEach((filterSearchWrapElement) => {
     const titleElement = filterSearchWrapElement.querySelector('.filter-search__title');
     const mobileList = filterSearchWrapElement.querySelector('.mobile-list');
@@ -81,3 +109,61 @@ function simulateButtonClick() {
     });
 }
 dynamicSlider("role-slider", 1, 1, 2, 1, "", true);
+document.addEventListener("DOMContentLoaded", function() {
+    (function() {
+        const checkboxes = document.querySelectorAll('.filter-item-checkbox');
+        console.log(checkboxes)
+
+        const updateFilterList = (label, isChecked) => {
+            const filterWrap = document.querySelector('.filter-wrap');
+            let filterList = filterWrap.querySelector('.filter-list');
+
+            if (!filterList) {
+                filterList = document.createElement('div');
+                filterList.classList.add('filter-list', 'w-dyn-items');
+                filterList.setAttribute('role', 'list');
+                filterWrap.appendChild(filterList);
+            }
+            if (isChecked) {
+                const listItem = document.createElement('div');
+                listItem.classList.add('filter-item', 'w-dyn-item');
+                listItem.setAttribute('role', 'listitem');
+                listItem.innerHTML = `<a href="#" class="cat-label w-inline-block"><div class="cat-label__text">${label}</div></a>`;
+
+                listItem.addEventListener('click', (e) => {
+                    try {
+                        const correspondingCheckbox = Array.from(checkboxes).find(checkbox =>
+                            checkbox.closest('.filter-item-row').querySelector('.filtet-item-label')?.textContent === label
+                        );
+                        if (correspondingCheckbox) {
+                            triggerClickEvent(correspondingCheckbox);
+                            correspondingCheckbox.checked = false;
+                        }
+                    } finally {
+                        filterList.removeChild(e.currentTarget);
+                    }
+                });
+                filterList.appendChild(listItem);
+            } else {
+                const existingLabel = Array.from(filterList.children).find(child => child.textContent.trim() === label);
+                if (existingLabel) {
+                    filterList.removeChild(existingLabel);
+                }
+            }
+        };
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const label = e.target.closest('.filter-item-row').querySelector('.filtet-item-label').textContent;
+                updateFilterList(label, e.target.checked);
+            });
+        });
+        function triggerClickEvent(checkbox) {
+            const event = new Event('click', {
+                'bubbles': true,
+                'cancelable': true
+            });
+            checkbox.dispatchEvent(event);
+        }
+        document.querySelector('.reset-button').addEventListener('click', (e) => document.querySelector('.filter-list').innerHTML = '');
+    }());
+})
