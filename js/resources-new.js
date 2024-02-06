@@ -112,7 +112,7 @@ dynamicSlider("role-slider", 1, 1, 2, 1, "", true);
 document.addEventListener("DOMContentLoaded", function() {
     (function() {
         const checkboxes = document.querySelectorAll('.filter-item-checkbox');
-        console.log(checkboxes)
+        // console.log(checkboxes)
 
         const updateFilterList = (label, isChecked) => {
             const filterWrap = document.querySelector('.filter-wrap');
