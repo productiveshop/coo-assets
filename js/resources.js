@@ -220,4 +220,6 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         document.querySelector('.reset-button').addEventListener('click', (e) => document.querySelector('.filter-list').innerHTML = '');
     }());
-})
+});
+
+document.querySelectorAll('.resources-nav [href^="/resources/"').forEach((a) => a.href = `${a.href}#latest`);
