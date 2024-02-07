@@ -78,7 +78,6 @@ $(".b-nav-option-child.is--second.is--tab:nth-child(0)").addClass("w--current");
 //$("#w-tabs-3-data-w-pane-1 .b-nav-option-child.is--second.is--tab:nth-child(1)").addClass("w--current");
 //$("#w-tabs-3-data-w-pane-1 .b-nav-option-child").addClass("w--current");
 
-
 // Override href tab links with custom attribute
 
 $.fn.hasAttr = function(name) {
