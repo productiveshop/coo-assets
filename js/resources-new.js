@@ -168,4 +168,18 @@ document.addEventListener("DOMContentLoaded", function() {
     }());
 });
 
-document.querySelectorAll('.resources-nav [href^="/resources/"').forEach((a) => a.href = `${a.href}#latest`);
+document.querySelectorAll('.resources-nav [href^="/resources/"').forEach((a) => {
+    a.href = `${a.href}#latest`;
+    a.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetElement = document.querySelector(this.getAttribute('href'));
+        const offset = 70; // Высота вашей шапки
+        const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - offset;
+
+        window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
+        });
+    });
+});
+
