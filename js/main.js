@@ -34,7 +34,7 @@ setTimeout(()=> {
     if(typeof Cookies.get(cookieName2) !== 'undefined') {
         $('#modal2').remove();
     }
-    $('#close-modal2, #close-modal-x2').on('click', function(){
+    $('#close-modal2, #close-modal-x2, #close-modal-x21').on('click', function(){
         Cookies.set(cookieName2, 'ok', { expires: 7 });
     })
 
