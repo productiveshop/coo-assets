@@ -3,11 +3,13 @@ Promise.all([
 ]).then(([SplideModule]) => {
     const Splide = SplideModule.default;
 
-    new Splide('#example-grid', {
+    new Splide('#feature-resources', {
         type: 'loop',
         height: '20rem',
         perPage: 1,
         perMove: 1,
+        autoplay: true,
+        interval: 3000,
     }).mount();
 }).catch(error => console.error('Error loading Splide:', error));
 
@@ -26,8 +28,6 @@ document.addEventListener("DOMContentLoaded", function(){
         }
 
         titleElement.addEventListener('click', () => {
-            console.log('click');
-
             titleElement.classList.toggle('active');
             contentElement.classList.toggle('hidden');
         });
