@@ -404,13 +404,6 @@
     font-style: normal;
     font-weight: 400;
     line-height: 20px;
-
-    .input-field{
-        grid-row-gap: 0;
-    }
-    .input-field__label{
-        margin-bottom: 8px;
-    }
 }
 
 .section.section-resources-center {
@@ -443,6 +436,12 @@
     font-weight: 400;
     line-height: 18px;
     padding-right: 0;
+}
+.input-field{
+    grid-row-gap: 0;
+}
+.input-field__label{
+    margin-bottom: 8px;
 }
 .input-field__input{
     color: #667085;

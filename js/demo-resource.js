@@ -1,134 +1,171 @@
 document.addEventListener('DOMContentLoaded', () => {
-        let userInteracted = false;
+    let userInteracted = false;
 
-        const lazyLoadVideo = () => {
-            if (!userInteracted) {
-                userInteracted = true;
-                document.querySelectorAll('.accordion-video-img').forEach(elem => {
-                    elem.style.display = 'none';
-                });
+    const lazyLoadVideo = () => {
+        if (!userInteracted) {
+            userInteracted = true;
+            document.querySelectorAll('.accordion-video-img').forEach(elem => {
+                elem.style.display = 'none';
+            });
 
-                document.removeEventListener('mousemove', lazyLoadVideo);
-                document.removeEventListener('scroll', lazyLoadVideo);
-                document.removeEventListener('touchstart', lazyLoadVideo);
-                document.removeEventListener('click', lazyLoadVideo);
-            }
+            document.removeEventListener('mousemove', lazyLoadVideo);
+            document.removeEventListener('scroll', lazyLoadVideo);
+            document.removeEventListener('touchstart', lazyLoadVideo);
+            document.removeEventListener('click', lazyLoadVideo);
+        }
+    };
+
+    var openButton1 = document.getElementById('openButton1');
+    var overlay = document.getElementById('overlay');
+    var popup = document.getElementById('popup');
+    var closeButton = document.getElementById('closeButton');
+    openButton1.addEventListener('click', function () {
+        overlay.style.display = 'flex';
+        popup.style.display = 'block';
+    });
+    closeButton.addEventListener('click', function () {
+        overlay.style.display = 'none';
+        popup.style.display = 'none';
+    });
+
+    /* Start Show Pop-up */
+    function getParameterByName(name, url = window.location.href) {
+        name = name.replace(/[\[\]]/g, '\\$&');
+        let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
+        let results = regex.exec(url);
+        if (!results) return null;
+        if (!results[2]) return '';
+        return decodeURIComponent(results[2].replace(/\+/g, ' '));
+    }
+
+    function getCookie(name) {
+        let matches = document.cookie.match(new RegExp(
+            "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+        ));
+        return matches ? decodeURIComponent(matches[1]) : undefined;
+    }
+
+    function setCookie(name, value, options = {}) {
+        options = {
+            path: '/',
+            ...options
         };
 
-        /* Start Hide Pop-up */
-        function getParameterByName(name, url = window.location.href) {
-            name = name.replace(/[\[\]]/g, '\\$&');
-            let regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)');
-            let results = regex.exec(url);
-            if (!results) return null;
-            if (!results[2]) return '';
-            return decodeURIComponent(results[2].replace(/\+/g, ' '));
+        if (options.expires instanceof Date) {
+            options.expires = options.expires.toUTCString();
         }
 
-        function handlePopupHide() {
-            let paramValue = getParameterByName('popup-hide');
-            if (paramValue !== null) {
-                let popup = document.querySelector('.page-pop-up');
-                let body = document.querySelector('body');
-                if (popup) {
-                    popup.style.display = 'none';
-                }
-                if (body) {
-                    body.classList.remove('overflow-hidden');
-                }
+        let updatedCookie = encodeURIComponent(name) + "=" + encodeURIComponent(value);
+
+        for (let optionKey in options) {
+            updatedCookie += "; " + optionKey;
+            let optionValue = options[optionKey];
+            if (optionValue !== true) {
+                updatedCookie += "=" + optionValue;
+            }
+        }
+
+        document.cookie = updatedCookie;
+    }
+
+    function showPopupIfNeeded() {
+        let popup = document.querySelector('.page-pop-up');
+        let body = document.querySelector('body');
+        let formCookie = getCookie('formData');
+
+        if (!getParameterByName('popup-hide') && !formCookie) {
+            popup.style.display = 'flex';
+            body.classList.add('overflow-hidden');
+        }
+    }
+
+    showPopupIfNeeded();
+    /* END Show Pop-up */
+
+    /* Start Pardot Form */
+    function initializeForm() {
+        const form = document.getElementById("pardot-form");
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            console.log('function submit');
+
+            const iframe = document.createElement('iframe');
+            iframe.name = 'hidden_iframe';
+            iframe.style.display = 'none';
+            document.body.appendChild(iframe);
+            console.log('iframe ', iframe);
+
+            form.action = 'https://go.copado.com/l/372431/2024-06-26/6tpcz1';
+            form.target = 'hidden_iframe';
+
+            const formData = new FormData(form);
+            console.log("Form data:");
+            for (let pair of formData.entries()) {
+                console.log(pair[0] + ': ' + pair[1]);
             }
 
-            document.addEventListener('mousemove', lazyLoadVideo);
-            document.addEventListener('scroll', lazyLoadVideo);
-            document.addEventListener('touchstart', lazyLoadVideo);
-            document.addEventListener('click', lazyLoadVideo);
-        }
-
-        handlePopupHide();
-        /* END Hide Pop-up */
-
-        /* Start Pardot Form */
-        function initializeForm() {
-            const form = document.getElementById("pardot-form");
-
-            form.addEventListener('submit', function (e) {
-                e.preventDefault();
-                e.stopPropagation();
-
-                console.log('function submit')
-
-                const iframe = document.createElement('iframe');
-                iframe.name = 'hidden_iframe';
-                iframe.style.display = 'none';
-                document.body.appendChild(iframe);
-                console.log('iframe ', iframe);
-
-
-                form.action = 'https://go.copado.com/l/372431/2024-06-26/6tpcz1';
-                form.target = 'hidden_iframe';
-
-                const formData = new FormData(form);
-                console.log("Form data:");
-                for (let pair of formData.entries()) {
-                    console.log(pair[0] + ': ' + pair[1]);
-                }
-
-
-                form.submit();
-                console.log('form.submit here')
-
-                iframe.onload = () => {
-                    let currentUrl = window.location.href;
-                    if (currentUrl.indexOf('?') > -1) {
-                        currentUrl += '&popup-hide=';
-                    } else {
-                        currentUrl += '?popup-hide=';
-                    }
-                    window.location.href = currentUrl;
-                };
+            // Save form data to cookies
+            let formDataObject = {};
+            formData.forEach((value, key) => {
+                formDataObject[key] = value;
             });
-        }
+            setCookie('formData', JSON.stringify(formDataObject), {'max-age': 3600});
 
-        initializeForm();
+            form.submit();
+            console.log('form.submit here');
 
-        /* END Pardot Form */
+            iframe.onload = () => {
+                let currentUrl = window.location.href;
+                if (currentUrl.indexOf('?') > -1) {
+                    currentUrl += '&popup-hide=';
+                } else {
+                    currentUrl += '?popup-hide=';
+                }
+                window.location.href = currentUrl;
+            };
+        });
+    }
 
-        setupAccordion(['.accordion1', '.accordion2', '.accordion3']);
-        initializeFilters();
+    initializeForm();
+    /* END Pardot Form */
 
-        /* Start Accordion */
-        function handleAccordion() {
-            const accordionList = document.querySelectorAll('.accordion-list-wrap .accordion-list-mobile');
+    setupAccordion(['.accordion1', '.accordion2', '.accordion3']);
+    initializeFilters();
 
-            function deactivateAll(except = null) {
-                accordionList.forEach(elem => {
-                    if (elem !== except) {
-                        let parent = elem.parentNode;
-                        if (parent && parent.classList.contains('accordion-list-wrap')) {
-                            parent.classList.remove('active');
-                        }
-                    }
-                });
-            }
+    /* Start Accordion */
+    function handleAccordion() {
+        const accordionList = document.querySelectorAll('.accordion-list-wrap .accordion-list-mobile');
 
+        function deactivateAll(except = null) {
             accordionList.forEach(elem => {
-                elem.addEventListener('click', () => {
+                if (elem !== except) {
                     let parent = elem.parentNode;
                     if (parent && parent.classList.contains('accordion-list-wrap')) {
-                        deactivateAll(elem);
-                        parent.classList.toggle('active');
+                        parent.classList.remove('active');
                     }
-                });
+                }
             });
-
-            window.addEventListener('resize', () => deactivateAll());
         }
 
-        handleAccordion();
-        /* END Accordion */
+        accordionList.forEach(elem => {
+            elem.addEventListener('click', () => {
+                let parent = elem.parentNode;
+                if (parent && parent.classList.contains('accordion-list-wrap')) {
+                    deactivateAll(elem);
+                    parent.classList.toggle('active');
+                }
+            });
+        });
+
+        window.addEventListener('resize', () => deactivateAll());
     }
-)
-;
+
+    handleAccordion();
+    /* END Accordion */
+});
 
 function setupAccordion(accordionClasses) {
     accordionClasses.forEach(accordionClass => {
