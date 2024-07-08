@@ -73,7 +73,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let body = document.querySelector('body');
         let formCookie = getCookie('formData');
 
-        if (!getParameterByName('popup-hide') && !formCookie) {
+        if (getParameterByName('popup-hide') != null) {
+            popup.style.display = 'none';
+            body.classList.remove('overflow-hidden');
+        } else {
             popup.style.display = 'flex';
             body.classList.add('overflow-hidden');
         }
