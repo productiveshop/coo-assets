@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    document.addEventListener('mousemove', lazyLoadVideo);
+    document.addEventListener('scroll', lazyLoadVideo);
+    document.addEventListener('touchstart', lazyLoadVideo);
+    document.addEventListener('click', lazyLoadVideo);
+
     var openButton1 = document.getElementById('openButton1');
     var overlay = document.getElementById('overlay');
     var popup = document.getElementById('popup');
@@ -73,12 +78,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let body = document.querySelector('body');
         let formCookie = getCookie('formData');
 
-        if (getParameterByName('popup-hide') != null) {
-            popup.style.display = 'none';
-            body.classList.remove('overflow-hidden');
-        } else {
+        if (getParameterByName('popup-hide') == null && formCookie == undefined) {
             popup.style.display = 'flex';
             body.classList.add('overflow-hidden');
+        } else {
+            popup.style.display = 'none';
+            body.classList.remove('overflow-hidden');
         }
     }
 
@@ -191,10 +196,18 @@ function setupAccordion(accordionClasses) {
 function resetActiveItems(parentElement) {
     parentElement.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
 }
-
+let lastActiveVideo = null;
 function toggleActive(button, video) {
+    if (lastActiveVideo != null) {
+        let src = lastActiveVideo.src;
+        lastActiveVideo.src = '';
+        lastActiveVideo.src = src;
+    }
+
     button.classList.add('active');
     video.classList.add('active');
+
+    lastActiveVideo = video.querySelector('iframe');
 }
 
 function initializeFilters() {
