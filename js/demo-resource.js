@@ -93,10 +93,33 @@ document.addEventListener('DOMContentLoaded', () => {
     /* Start Pardot Form */
     function initializeForm() {
         const form = document.getElementById("pardot-form");
+        let popup = document.querySelector('.page-pop-up');
+        let body = document.querySelector('body');
+
+        form.addEventListener('invalid', (event) => {
+            event.preventDefault();
+            event.target.classList.add('invalid');
+            console.log(`Ошибка в поле: ${event.target.name}. Сообщение: ${event.target.validationMessage}`);
+        }, true);
+
+        form.addEventListener('input', (event) => {
+            if (event.target.validity.valid) {
+                event.target.classList.remove('invalid');
+            }
+        });
 
         form.addEventListener('submit', function (e) {
             e.preventDefault();
             e.stopPropagation();
+
+            let isFormValid = form.checkValidity();
+            if (!isFormValid) {
+                console.error('Форма заполнена неверно.');
+                return;
+            }
+
+            popup.style.display = 'none';
+            body.classList.remove('overflow-hidden');
 
             console.log('function submit');
 
@@ -196,7 +219,9 @@ function setupAccordion(accordionClasses) {
 function resetActiveItems(parentElement) {
     parentElement.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
 }
+
 let lastActiveVideo = null;
+
 function toggleActive(button, video) {
     if (lastActiveVideo != null) {
         let src = lastActiveVideo.src;
